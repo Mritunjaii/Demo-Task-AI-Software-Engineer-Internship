@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FieldType {
+  text
+  number
+  boolean
+  date
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? // soft delete
+
+  apps      App[]    @relation("UserApps")
+  records   Record[] @relation("UserRecords")
+}
+
+model App {
+  id        Int      @id @default(autoincrement())
+  name      String
+  ownerId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  owner     User     @relation("UserApps", fields: [ownerId], references: [id])
+  entities  Entity[] @relation("AppEntities")
+
+  @@index([ownerId])
+}
+
+model Entity {
+  id        Int      @id @default(autoincrement())
+  appId     Int
+  name      String
+  schemaJson Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  app       App      @relation("AppEntities", fields: [appId], references: [id])
+  records   Record[] @relation("EntityRecords")
+
+  @@unique([appId, name]) // entity name unique per app
+  @@index([appId])
+}
+
+model Record {
+  id        Int      @id @default(autoincrement())
+  entityId  Int
+  data      Json
+  createdBy Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  entity    Entity   @relation("EntityRecords", fields: [entityId], references: [id])
+  creator   User     @relation("UserRecords", fields: [createdBy], references: [id])
+
+  @@index([entityId])
+  @@index([createdBy])
+}
