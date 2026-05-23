@@ -10,7 +10,15 @@ const options = {
       version: '1.0.0',
       description: 'A metadata-driven runtime API for managing entities and records dynamically.',
     },
-    servers: [{ url: '/api/v1', description: 'Version 1' }],
+    servers: [
+      {
+        url: 'https://demo-task-ai-software-engineer-inte.vercel.app/api/v1',
+        description: 'Production server',
+      },{
+        url: 'http://localhost:3000/api/v1',
+        description: 'Development server',
+      }
+    ],
     components: {
       securitySchemes: {
         BearerAuth: {
