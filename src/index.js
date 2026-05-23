@@ -22,7 +22,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
 
 app.use(express.static(path.join(__dirname, '..', 'public')));
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./docs/swagger');
 
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use('/api', apiRoutes);
 
 app.get('/health', (req, res) => {

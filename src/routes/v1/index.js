@@ -13,6 +13,6 @@ router.use('/auth', authRoutes);
 router.use('/apps', appRoutes);
 router.use('/apps/:appId/entities', entityRoutes);
 router.use('/apps/:appId/records', recordRoutes);
-router.use('/docs', docsRoutes);
+// router.use('/docs', docsRoutes);
 
 module.exports = router;
