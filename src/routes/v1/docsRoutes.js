@@ -14,6 +14,11 @@ router.get('/swagger.json', (req, res) => {
 router.use('/', swaggerUi.serve);
 router.get('/', swaggerUi.setup(swaggerSpec, {
   customSiteTitle: 'Demo Task AI Software Engineer Internship API Docs',
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-standalone-preset.min.js',
+  ],
   customCss: `
     .swagger-ui .topbar { background: #212529; }
     .swagger-ui .topbar-wrapper img { display: none; }
