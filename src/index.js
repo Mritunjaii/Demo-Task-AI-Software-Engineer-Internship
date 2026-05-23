@@ -38,9 +38,11 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`Swagger UI:    http://localhost:${PORT}/api/v1/docs`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+    console.log(`Swagger UI:    http://localhost:${PORT}/api/v1/docs`);
+  });
+}
 
 module.exports = app;
