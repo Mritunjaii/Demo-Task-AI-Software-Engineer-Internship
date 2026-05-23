@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: 'https://demo-task-ai-software-engineer-inte.vercel.app/api/v1',
+        url: 'https://demo-task-ai-software-engineeer-int.vercel.app/api/v1',
         description: 'Production server',
       },{
         url: 'http://localhost:3000/api/v1',
