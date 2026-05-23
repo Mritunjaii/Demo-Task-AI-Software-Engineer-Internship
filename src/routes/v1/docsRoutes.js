@@ -8,23 +8,27 @@ const router = express.Router();
 
 router.get('/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
-  res.json(swaggerSpec);
+  res.send(swaggerSpec);
 });
 
-router.use('/', swaggerUi.serve);
-router.get('/', swaggerUi.setup(swaggerSpec, {
-  customSiteTitle: 'Demo Task AI Software Engineer Internship API Docs',
-  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css',
-  customJs: [
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-standalone-preset.min.js',
-  ],
-  customCss: `
-    .swagger-ui .topbar { background: #212529; }
-    .swagger-ui .topbar-wrapper img { display: none; }
-    .swagger-ui .topbar-wrapper::after { content: '⚡ Demo Task API'; color: #ff7043; font-size: 1.2rem; font-weight: bold; }
-    .swagger-ui .btn.execute { background: #ff7043; border-color: #ff7043; }
-  `,
-}));
+router.use(
+  '/',
+  swaggerUi.serveFiles(swaggerSpec),
+  swaggerUi.setup(swaggerSpec, {
+    customSiteTitle: 'Demo Task API Docs',
+    customCss: `
+      .swagger-ui .topbar {
+        background: #212529;
+      }
+
+      .swagger-ui .topbar-wrapper::after {
+        content: '⚡ Demo Task API';
+        color: #ff7043;
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+    `,
+  })
+);
 
 module.exports = router;

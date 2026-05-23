@@ -37,7 +37,7 @@ app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
-  console.log(`Swagger UI:    http://localhost:${PORT}/api/docs`);
+  console.log(`Swagger UI:    http://localhost:${PORT}/api/v1/docs`);
 });
 
 module.exports = app;
