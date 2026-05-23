@@ -1,44 +1,45 @@
-# Multi-stage Dockerfile for Node.js + Prisma app
+# ---------- Builder ----------
 FROM node:20-bullseye-slim AS builder
 
 WORKDIR /app
 
-# Install build tools for native modules
+# Install build tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential python3 git ca-certificates && \
+    build-essential python3 git ca-certificates openssl && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy package manifests and install all dependencies (including prisma)
-COPY package.json package-lock.json* ./
-# Use `npm ci` when a lockfile exists, otherwise fall back to `npm install`
-RUN if [ -f package-lock.json ]; then \
-            npm ci; \
-        else \
-            npm install --no-audit --no-fund; \
-        fi
+# Copy package files
+COPY package*.json ./
 
-# Copy app source and generate Prisma client
-COPY . .
+# Install dependencies
+RUN npm ci --ignore-scripts
+
+# Copy prisma first
+COPY prisma ./prisma
+
+# Generate Prisma client
 RUN npx prisma generate
 
-# Remove dev files to keep image small
+# Copy remaining source code
+COPY . .
+
+# Remove dev dependencies
 RUN npm prune --production
 
-## Production image
+# ---------- Production ----------
 FROM node:20-bullseye-slim
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy only production node_modules and built app from builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app .
+COPY --from=builder /app ./
 
 EXPOSE 3000
 
-# Use a non-root user for better security (optional)
-RUN useradd --user-group --create-home --shell /bin/false appuser && chown -R appuser:appuser /app
+RUN useradd --user-group --create-home --shell /bin/false appuser && \
+    chown -R appuser:appuser /app
+
 USER appuser
 
 CMD ["node", "src/index.js"]
