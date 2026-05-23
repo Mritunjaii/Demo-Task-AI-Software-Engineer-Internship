@@ -10,7 +10,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy package manifests and install all dependencies (including prisma)
 COPY package.json package-lock.json* ./
-RUN npm ci
+# Use `npm ci` when a lockfile exists, otherwise fall back to `npm install`
+RUN if [ -f package-lock.json ]; then \
+            npm ci; \
+        else \
+            npm install --no-audit --no-fund; \
+        fi
 
 # Copy app source and generate Prisma client
 COPY . .
