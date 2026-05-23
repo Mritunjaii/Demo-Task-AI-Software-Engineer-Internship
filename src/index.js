@@ -33,7 +33,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the Dynamic Entity API. Please use the /api endpoints.' });
+  res.json({ message: 'Welcome to the Dynamic Entity API. Please use the /api/v1/docs endpoints.' });
 });
 
 app.use(errorHandler);
